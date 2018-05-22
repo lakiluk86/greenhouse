@@ -8,9 +8,13 @@
 
 #define MAXTIMINGS 85
 
-static int dht22_dat[5] = {0,0,0,0,0};
+using namespace std;
 
-uint8_t sizecvt(const int read);
-int read_dht22_dat(int pin);
-float get_temp();
-float get_humidity();
+class DHT22 {
+		int dht22_dat[5] = {0,0,0,0,0};
+		int pin;
+		uint8_t sizecvt(const int read);
+	public:
+		DHT22(int pin);
+		int readData(float *temp, float *humi);
+};

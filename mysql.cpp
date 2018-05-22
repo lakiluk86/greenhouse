@@ -1,52 +1,57 @@
 
 #include "mysql.h"
 
-void mysql_connect(MYSQL *mysql1)
+using namespace std;
+
+MysqlConn::MysqlConn(string database, string username, string password)
 {
-     //initialize MYSQL object for connections
-     mysql1 = mysql_init(NULL);
-
-     if(mysql1 == NULL)
-     {
-         fprintf(stderr, "ABB : %s\n", mysql_error(mysql1));
-         return;
-     }
-
-     //Connect to the database
-     if(mysql_real_connect(mysql1, "localhost", DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_NAME, 0, NULL, 0) == NULL)
-     {
-      fprintf(stderr, "%s\n", mysql_error(mysql1));
-     }
-     else
-     {
-         printf("Database connection successful.\r\n");
-     }
+	this->database = database;
+	this->username = username;
+	this->password = password;
 }
 
-void mysql_disconnect(MYSQL *mysql1)
+MysqlConn::~MysqlConn()
 {
-     mysql_close(mysql1);
-     printf( "Disconnected from database.\r\n");
+	mysql_close(mysql);
 }
 
-void mysql_write_something(MYSQL *mysql1)
+int MysqlConn::connect()
 {
-    //vector times;   //a vector of alarm times
-     if(mysql1 != NULL)
-     {
-         //Retrieve all data from alarm_times
-         if (mysql_query(mysql1, "INSERT INTO temp_sens (   \
-     id,   \
-     value   \
-    ) VALUES (   \
-     99,   \
-     '50'   \
-    ) \
-    "))
+	mysql = mysql_init(NULL);
 
-         { 
-              fprintf(stderr, "%s\n", mysql_error(mysql1));
-              return;
-         }
-     }
+	if(mysql == NULL) {
+		cerr << mysql_error(mysql);
+		return 1;
+	}
+
+	if(mysql_real_connect(mysql, "localhost", username.c_str(), password.c_str(), database.c_str(), 0, NULL, 0) == NULL){
+		cerr << mysql_error(mysql);
+		return 1;
+	}
+	
+	return 0;
+}
+
+int MysqlConn::query(string sql)
+{
+	 if(mysql != NULL) {
+		 if (mysql_query(mysql, "INSERT INTO temp_sens (   \
+			 temperature,   \
+			 humidity   \
+			) VALUES (   \
+			 19.6,   \
+			 '61.3'   \
+			) \
+			"))
+		 { 
+			  cerr << mysql_error(mysql);
+			  return 1;
+		 }
+	 }
+	 else {
+		 cerr << "No connection to database";
+		 return 1;
+	 }
+	 
+	 return 0;
 }

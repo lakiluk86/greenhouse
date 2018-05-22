@@ -1,5 +1,12 @@
-all: dht22.cpp greenhouse.cpp mysql.cpp
-	g++ greenhouse.cpp dht22.cpp mysql.cpp -o greenhouse -lwiringPi `mysql_config --cflags` `mysql_config --libs`
+CXX = g++
+CXXFLAGS = `mysql_config --cflags` -Wall -g
+LIBS = -lwiringPi `mysql_config --libs`
+
+greenhouse: dht22.o mysql.o greenhouse.o
+	$(CXX) $(LIBS) $? -o greenhouse
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
-	rm -f greenhouse
+	rm -f greenhouse %.o

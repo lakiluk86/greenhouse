@@ -1,13 +1,18 @@
 
 #include <stdio.h>
-#include <string.h>
+#include <string>
 #include <stdlib.h>
 #include <mysql/mysql.h>
+#include <iostream>
 
-#define DATABASE_NAME  "raspberrydb"
-#define DATABASE_USERNAME "pi"
-#define DATABASE_PASSWORD "luky_luke8"
+using namespace std;
 
-void mysql_connect(MYSQL *mysql1);
-void mysql_disconnect(MYSQL *mysql1);
-void mysql_write_something(MYSQL *mysql1);
+class MysqlConn {
+		string database, username, password;
+		MYSQL *mysql;
+	public:
+		MysqlConn(string database, string username, string password);
+		~MysqlConn();
+		int connect();
+		int query(string sql);
+};
