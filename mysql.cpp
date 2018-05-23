@@ -35,14 +35,7 @@ int MysqlConn::connect()
 int MysqlConn::query(string sql)
 {
 	 if(mysql != NULL) {
-		 if (mysql_query(mysql, "INSERT INTO temp_sens (   \
-			 temperature,   \
-			 humidity   \
-			) VALUES (   \
-			 19.6,   \
-			 '61.3'   \
-			) \
-			"))
+		 if (mysql_query(mysql, sql))
 		 { 
 			  cerr << mysql_error(mysql);
 			  return 1;
