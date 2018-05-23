@@ -11,7 +11,6 @@
 using namespace std;
 
 class DHT22 {
-		int dht22_dat[5] = {0,0,0,0,0};
 		int pin;
 		uint8_t sizecvt(const int read);
 	public:
