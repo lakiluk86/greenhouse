@@ -17,11 +17,10 @@ uint8_t DHT22::sizecvt(const int read)
 
 int DHT22::readData(float *temp, float *humi)
 {
+	int dht22_dat[5] = {0,0,0,0,0};
 	uint8_t laststate = HIGH;
 	uint8_t counter = 0;
 	uint8_t j = 0, i;
-
-	dht22_dat[0] = dht22_dat[1] = dht22_dat[2] = dht22_dat[3] = dht22_dat[4] = 0;
 
 	// pull pin down for 18 milliseconds
 	pinMode(pin, OUTPUT);
