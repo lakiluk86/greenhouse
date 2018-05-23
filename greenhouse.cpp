@@ -2,6 +2,8 @@
 #include "dht22.h"
 #include "mysql.h"
 
+using namespace std;
+
 #define DATABASE_NAME  "raspberrydb"
 #define DATABASE_USERNAME "pi"
 #define DATABASE_PASSWORD "luky_luke8"
@@ -42,9 +44,7 @@ int main(int argc, char *argv[])
 	}
 
 	printf("Temperature: %3.1f°, Humidity: %3.1f%%", temp, humidity);
-	
-	mysqlConn.query("INSERT INTO temp_sens (temperature, humidity)	\
-		VALUES (" << temp << ", " << humidity << ")");
+	mysqlConn.query("INSERT INTO temp_sens (temperature, humidity) VALUES (" << temp << ", " << humidity << ")");
 	
 	return 0;
 }
