@@ -9,4 +9,4 @@ greenhouse: greenhouse.o dht22.o mysql.o
 	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
-	rm -f greenhouse %.o
+	rm -f greenhouse *.o
