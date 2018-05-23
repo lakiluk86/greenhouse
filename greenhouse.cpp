@@ -42,7 +42,9 @@ int main(int argc, char *argv[])
 	}
 
 	printf("Temperature: %3.1f°, Humidity: %3.1f%%", temp, humidity);
-	mysqlConn.query("");
+	
+	mysqlConn.query("INSERT INTO temp_sens (temperature, humidity)	\
+		VALUES (" << temp << ", " << humidity << ")");
 	
 	return 0;
 }
