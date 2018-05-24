@@ -15,17 +15,14 @@ int setup(MysqlConn *mysqlConn)
 	if(mysqlConn->connect()){
 		return 1;
 	}
-	
 	if (wiringPiSetup() == -1){
 		cerr << "Error wiring pi setup";
 		return 1;
 	}
-
 	if (setuid(getuid()) < 0){
 		cerr << "Dropping privileges failed";
 		return 1;
 	}
-
 	return 0;
 }
 
@@ -33,7 +30,7 @@ int main(int argc, char *argv[])
 {
 	MysqlConn mysqlConn(DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD);
 	DHT22 dht22(7);
-	float temp, humidity;
+	float temperature, humidity;
 	
 	if(setup(&mysqlConn)){
 		exit(EXIT_FAILURE);
@@ -44,8 +41,8 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	printf("Temperature: %3.1f°, Humidity: %3.1f%%", temp, humidity);
-	mysqlConn.query("INSERT INTO temp_sens (temperature, humidity) VALUES (" << temp << ", " << humidity << ")");
+	printf("Temperature: %3.1f°, Humidity: %3.1f%%", temperature, humidity);
+	mysqlConn.query("INSERT INTO temp_sens (temperature, humidity) VALUES (" << temperature << ", " << humidity << ")");
 	
 	return 0;
 }
