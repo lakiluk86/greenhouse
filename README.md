@@ -1,13 +1,13 @@
 # greenhouse
 Application for a greenhouse controlled by a Raspberry Pi
 
-Build:
-  make all
+Build:<br>
+make all
 
-Insert to crontab:
-  crontab -e
-  add "*/10 * * * *  /home/pi/backup.sh"
-  reboot then
+Insert to crontab:<br>
+crontab -e<br>
+add "*/10 * * * *  /home/pi/backup.sh"<br>
+reboot then
 
-List crontab:
-  crontab -l
+List crontab:<br>
+crontab -l
