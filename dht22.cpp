@@ -15,7 +15,18 @@ uint8_t DHT22::sizecvt(const int read)
 	return (uint8_t)read;
 }
 
-int DHT22::readData(float *temp, float *humi)
+int DHT22::readData(float *temperature, float *humidity, int tries)
+{
+	int status = 1;
+	
+	while(status = readData(temperature, humidity) && tries--){
+		delay(1000);
+	}
+	
+	return status;
+}
+
+int DHT22::readData(float *temperature, float *humidity)
 {
 	int dht22_dat[5] = {0,0,0,0,0};
 	uint8_t laststate = HIGH;
@@ -70,8 +81,8 @@ int DHT22::readData(float *temp, float *humi)
 		h = (float)dht22_dat[0] * 256 + (float)dht22_dat[1];
 		h /= 10;
 
-		*temp = t;
-		*humi = h;
+		*temperature = t;
+		*humidity = h;
 		return 0;
 	}
 	
