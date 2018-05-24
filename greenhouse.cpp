@@ -39,8 +39,9 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	while (dht22.readData(&temp, &humidity) && tries--){
-		delay(1000);
+	if(dht22.readData(&temp, &humidity, tries)){
+		cerr << "Unable to read sensor data";
+		exit(EXIT_FAILURE);
 	}
 
 	printf("Temperature: %3.1f°, Humidity: %3.1f%%", temp, humidity);
