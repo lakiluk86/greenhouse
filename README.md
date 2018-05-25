@@ -7,7 +7,9 @@ make all
 ## Insert to crontab:
 * crontab -e
 * add "*/10 * * * *  /home/pi/backup.sh" at end
-* reboot to activate
+
+## Reload cron service
+sudo /etc/init.d/cron restart
 
 ## List crontab:
 crontab -l
