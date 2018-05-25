@@ -19,7 +19,7 @@ int DHT22::readData(float *temperature, float *humidity, int tries)
 {
 	int status = 1;
 	
-	while(status = readData(temperature, humidity) && tries--){
+	while((status = readData(temperature, humidity)) && tries--){
 		delay(1000);
 	}
 	

@@ -35,7 +35,7 @@ int MysqlConn::connect()
 int MysqlConn::query(string sql)
 {
 	 if(mysql != NULL) {
-		 if (mysql_query(mysql, sql))
+		 if (mysql_query(mysql, sql.c_str()))
 		 { 
 			  cerr << mysql_error(mysql);
 			  return 1;

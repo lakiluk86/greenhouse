@@ -16,5 +16,5 @@ class DHT22 {
 	public:
 		DHT22(int pin);
 		int readData(float *temp, float *humi);
-		int readData(float *temp, float *humi. int tries);
+		int readData(float *temp, float *humi, int tries);
 };

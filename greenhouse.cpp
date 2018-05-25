@@ -1,4 +1,6 @@
 
+#include <sstream>
+#include <string>
 #include "dht22.h"
 #include "mysql.h"
 
@@ -36,13 +38,15 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	if(dht22.readData(&temp, &humidity, tries)){
+	if(dht22.readData(&temperature, &humidity, tries)){
 		cerr << "Unable to read sensor data";
 		exit(EXIT_FAILURE);
 	}
 
 	printf("Temperature: %3.1f°, Humidity: %3.1f%%", temperature, humidity);
-	mysqlConn.query("INSERT INTO temp_sens (temperature, humidity) VALUES (" << temperature << ", " << humidity << ")");
+	stringstream ss;
+	ss << "INSERT INTO temp_sens (temperature, humidity) VALUES (" << temperature << ", " << humidity << ")";
+	mysqlConn.query(ss.str());
 	
 	return 0;
 }
