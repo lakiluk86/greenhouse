@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	//read channel 0 of mcp3008
 	brightness = analogRead(MCP3008_PIN_BASE);
 	
-	printf("Temperature: %3.1f°, Humidity: %3.1f%%, Light: %d", temperature, humidity, brightness);
+	printf("Temperature: %3.1f°, Humidity: %3.1f%%, Brightness: %d", temperature, humidity, brightness);
 	
 	//insert sensordata to db
 	sql_query << "INSERT INTO sensor_data (temperature, humidity, brightness) \
