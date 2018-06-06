@@ -6,7 +6,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define MAXTIMINGS 85
+static const int MAXTIMINGS = 85;
+static const float MAX_TEMP = 50.0f;
+static const float MIN_TEMP = -50.0f;
+static const float MAX_HUMIDITY = 100.0f;
+static const float MIN_HUMIDITY = 0.0f;
 
 using namespace std;
 

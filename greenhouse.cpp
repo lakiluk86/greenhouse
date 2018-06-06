@@ -8,19 +8,19 @@
 
 using namespace std;
 
-#define DB_NAME  "raspberrydb"
-#define DB_USERNAME "pi"
-#define DB_PASSWORD "luky_luke8"
+static const char* DB_NAME = "raspberrydb";
+static const char* DB_USERNAME = "pi";
+static const char* DB_PASSWORD = "luky_luke8";
 
-#define DHT22_PIN 7
-#define DHT22_TRIES 20
+static const int DHT22_PIN = 7;
+static const int DHT22_TRIES = 20;
 
-#define MOISTURE_PIN 0
+static const int MOISTURE_VCC_PIN = 0;
 
-#define MCP3008_SPI_CHAN 0
-#define MCP3008_PIN_BASE 12345
-#define MCP3008_CHAN_BRIGHTNESS 0
-#define MCP3008_CHAN_MOISTURE 1
+static const int MCP3008_SPI_CHAN = 0;
+static const int MCP3008_PIN_BASE = 12345;
+static const int MCP3008_CHAN_BRIGHTNESS = 0;
+static const int MCP3008_CHAN_MOISTURE = 1;
 
 int setup(MysqlConn *mysqlConn)
 {
@@ -46,11 +46,11 @@ int readMoisture()
 {
 	int moisture;
 	
-	pinMode(MOISTURE_PIN, OUTPUT);
-	digitalWrite(MOISTURE_PIN, HIGH);
+	pinMode(MOISTURE_VCC_PIN, OUTPUT);
+	digitalWrite(MOISTURE_VCC_PIN, HIGH);
 	delay(1000);
 	moisture = analogRead(MCP3008_PIN_BASE + MCP3008_CHAN_MOISTURE);
-	digitalWrite(MOISTURE_PIN, LOW);
+	digitalWrite(MOISTURE_VCC_PIN, LOW);
 	
 	return moisture;
 }
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
 	//read DHT22 sensor
 	if(dht22.readData(&temperature, &humidity, DHT22_TRIES)){
-		cerr << "Unable to read sensor data";
+		cerr << "Unable to read DHT22 sensor data";
 		exit(EXIT_FAILURE);
 	}
 	
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 	//read channel moisture of adc
 	moisture = readMoisture();
 	
-	printf("Temperature: %3.1f°, Humidity: %3.1f%%, Brightness: %d, Moisture: %d", temperature, humidity, brightness, moisture);
+	printf("Temperature: %3.1f°, Humidity: %3.1f%%, Brightness: %d, Moisture: %d\n", temperature, humidity, brightness, moisture);
 	
 	//insert sensordata to db
 	sql_query << "INSERT INTO sensor_data (temperature, humidity, brightness, moisture) \

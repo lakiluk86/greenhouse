@@ -81,9 +81,11 @@ int DHT22::readData(float *temperature, float *humidity)
 		h = (float)dht22_dat[0] * 256 + (float)dht22_dat[1];
 		h /= 10;
 
-		*temperature = t;
-		*humidity = h;
-		return 0;
+		if((t > MIN_TEMP && t < MAX_TEMP) && (h > MIN_HUMIDITY && h < MAX_HUMIDITY)){
+			*temperature = t;
+			*humidity = h;
+			return 0;
+		}
 	}
 	
 	//data not good
