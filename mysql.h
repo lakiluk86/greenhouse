@@ -14,5 +14,5 @@ class MysqlConn {
 		MysqlConn(string database, string username, string password);
 		~MysqlConn();
 		int connect();
-		int query(string sql);
+		int query(string sql, MYSQL_RES *result);
 };
