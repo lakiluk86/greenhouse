@@ -61,7 +61,9 @@ int readMoisture()
 int main(int argc, char *argv[])
 {
 	MysqlConn mysqlConn(DB_NAME, DB_USERNAME, DB_PASSWORD);
+	MYSQL_RES *sql_result;
 	stringstream sql_query;
+	
 	DHT22 dht22(DHT22_PIN);
 	float temperature, humidity;
 	int brightness, moisture;
@@ -90,7 +92,7 @@ int main(int argc, char *argv[])
 		//insert sensordata to db
 		sql_query << "INSERT INTO sensor_data (temperature, humidity, brightness, moisture) \
 			VALUES (" << temperature << ", " << humidity << ", " << brightness << ", " << moisture << ")";
-		mysqlConn.query(sql_query.str());
+		mysqlConn.query(sql_query.str(), sql_result);
 	}
 	
 	return 0;
