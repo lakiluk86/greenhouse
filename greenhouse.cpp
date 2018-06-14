@@ -89,7 +89,35 @@ int main(int argc, char *argv[])
 		printf("Temperature: %3.1f°, Humidity: %3.1f%%, Brightness: %d, Moisture: %d\n", temperature, humidity, brightness, moisture);
 	}
 	else {
+		//only insert mean values, for that select last values
+		sql_query << "SELECT * FROM sensor_data ORDER BY timestamp LIMIT 10";
+		
+		mysqlConn.query(sql_query.str(), sql_result);
+		if (sql_result == NULL){
+			cerr << "Error reading db";
+			exit(EXIT_FAILURE);
+		}  
+
+		int num_fields = mysql_num_fields(sql_result);
+		MYSQL_ROW row;
+		MYSQL_FIELD *field;
+
+		while((row = mysql_fetch_row(sql_result))){
+			for(int i=0; i<num_fields; i++){
+				if (i==0){
+					while(field = mysql_fetch_field(sql_result)){
+						printf("%s ", field->name);
+					}
+					printf("\n");
+				}
+				printf("%s  ", row[i] ? row[i] : "NULL");
+			}
+		}
+		
+		mysql_free_result(sql_result);	//free result data
+		
 		//insert sensordata to db
+		sql_query.str(std::string());
 		sql_query << "INSERT INTO sensor_data (temperature, humidity, brightness, moisture) \
 			VALUES (" << temperature << ", " << humidity << ", " << brightness << ", " << moisture << ")";
 		mysqlConn.query(sql_query.str(), sql_result);
