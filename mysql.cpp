@@ -32,14 +32,15 @@ int MysqlConn::connect()
 	return 0;
 }
 
-int MysqlConn::query(string sql)
+int MysqlConn::query(string sql, MYSQL_RES *result)
 {
-	 if(mysql != NULL) {
-		 if (mysql_query(mysql, sql.c_str()))
-		 { 
+	 if(mysql != NULL){
+		 if (mysql_query(mysql, sql.c_str())){ 
 			  cerr << mysql_error(mysql);
 			  return 1;
 		 }
+		 
+		 result = mysql_store_result(mysql);
 	 }
 	 else {
 		 cerr << "No connection to database";
