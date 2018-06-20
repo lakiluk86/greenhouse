@@ -19,6 +19,7 @@ static const int DHT22_TRIES = 20;	//dht22 tries for reading values
 
 static const int MOISTURE_VCC_PIN = 0;	//VCC pin of moisture sensor
 static const int MOISTURE_DELAY_TIME = 1000;	//time VCC active before reading moisture sensor
+static const int MOISTURE_READ_CYCLES = 5;	//read cycles of moisture sensor
 
 static const int MCP3008_SPI_CHAN = 0;	//spi channel of mcp3008
 static const int MCP3008_PIN_BASE = 12345;	//pin base for virtual pins
@@ -47,14 +48,20 @@ int setup(MysqlConn *mysqlConn)
 
 int readMoisture()
 {
-	int moisture;
+	int moisture = 0;
 	
 	pinMode(MOISTURE_VCC_PIN, OUTPUT);
 	digitalWrite(MOISTURE_VCC_PIN, HIGH);
 	delay(MOISTURE_DELAY_TIME);
-	moisture = analogRead(MCP3008_PIN_BASE + MCP3008_CHAN_MOISTURE);
-	digitalWrite(MOISTURE_VCC_PIN, LOW);
 	
+	//read moisture MOISTURE_READ_CYCLES times and build mean value
+	for(int i=0; i<MOISTURE_READ_CYCLES; i++){
+		moisture += analogRead(MCP3008_PIN_BASE + MCP3008_CHAN_MOISTURE);
+		delay(10);
+	}
+	moisture = moisture / MOISTURE_READ_CYCLES;
+	
+	digitalWrite(MOISTURE_VCC_PIN, LOW);
 	return moisture;
 }
 
