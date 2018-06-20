@@ -16,6 +16,7 @@ static const char* DB_PASSWORD = "luky_luke8";
 
 static const int DHT22_PIN = 7;	//dht22 1wire pin
 static const int DHT22_TRIES = 20;	//dht22 tries for reading values
+static const int DHT22_READ_CYCLES = 5;	//read cycles of dht22 sensor
 
 static const int MOISTURE_VCC_PIN = 0;	//VCC pin of moisture sensor
 static const int MOISTURE_DELAY_TIME = 1000;	//time VCC active before reading moisture sensor
@@ -72,18 +73,26 @@ int main(int argc, char *argv[])
 	stringstream sql_query;
 	
 	DHT22 dht22(DHT22_PIN);
-	float temperature, humidity;
+	float temperature, humidity, tempMean = 0, humidityMean = 0;
 	int brightness, moisture;
 	
 	if(setup(&mysqlConn)){
 		exit(EXIT_FAILURE);
 	}
 
-	//read DHT22 sensor
-	if(dht22.readData(&temperature, &humidity, DHT22_TRIES)){
-		cerr << "Unable to read DHT22 sensor data";
-		exit(EXIT_FAILURE);
+	//read dht22 DHT22_READ_CYCLES times and build mean value
+	for(int i=0; i<DHT22_READ_CYCLES; i++){
+		//read DHT22 sensor
+		if(dht22.readData(&temperature, &humidity, DHT22_TRIES)){
+			cerr << "Unable to read DHT22 sensor data";
+			exit(EXIT_FAILURE);
+		}
+		delay(10);
+		tempMean += temperature;
+		humidityMean += humidity;
 	}
+	tempMean = tempMean / DHT22_READ_CYCLES;
+	humidityMean = humidityMean / DHT22_READ_CYCLES;
 	
 	//read channel brightness of adc
 	brightness = analogRead(MCP3008_PIN_BASE + MCP3008_CHAN_BRIGHTNESS);
@@ -93,7 +102,7 @@ int main(int argc, char *argv[])
 	
 	if((argc > 1) && (strcmp(argv[1],"-p") == 0)){
 		//only print
-		printf("Temperature: %3.1f°, Humidity: %3.1f%%, Brightness: %d, Moisture: %d\n", temperature, humidity, brightness, moisture);
+		printf("Temperature: %3.1f°, Humidity: %3.1f%%, Brightness: %d, Moisture: %d\n", tempMean, humidityMean, brightness, moisture);
 	}
 	else {
 		//only insert mean values, for that select last values
@@ -126,7 +135,7 @@ int main(int argc, char *argv[])
 		//insert sensordata to db
 		sql_query.str(std::string());
 		sql_query << "INSERT INTO sensor_data (temperature, humidity, brightness, moisture) \
-			VALUES (" << temperature << ", " << humidity << ", " << brightness << ", " << moisture << ")";
+			VALUES (" << tempMean << ", " << humidityMean << ", " << brightness << ", " << moisture << ")";
 		mysqlConn.query(sql_query.str(), sql_result);
 	}
 	
